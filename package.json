@@ -1,0 +1,22 @@
+{
+  "name": "task-manager",
+  "version": "0.0.1",
+  "description": "REST API for Task Manager Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sasongkoadi/task-manager.git"
+  },
+  "author": "SasongkoAdi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sasongkoadi/task-manager/issues"
+  },
+  "homepage": "https://github.com/sasongkoadi/task-manager#readme",
+  "dependencies": {
+    "mongodb": "^3.6.2"
+  }
+}
