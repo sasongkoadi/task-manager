@@ -41,19 +41,23 @@ const User = mongoose.model('User', {
             if (value < 0) {
                 throw new Error ('Age must be positive')
             }
-        }
+       }
     },
 })
 
 const Task = mongoose.model('Task', {
     description: {
-        type: String
+        type: String,
+        trim: true,
+        required: true
     },
     complete: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 })
 
+/*
 const user = new User({
     name: 'Zahra ',
     age: 3,
@@ -67,27 +71,16 @@ user.save().then((result) => {
     console.log(err.message); 
 });
 
-/*
-const task = new Task({
-    description: 'Learning mongodb',
-    complete: false 
-})
-
-task.save().then((express) => {
-    console.log(express);
-}).catch((error) => {
-    console.log(error);
-})
-
-const me = new User({
-    name: 'Muhammad Zaki Mubarok',
-    age: "test" 
-})
-
-me.save().then((me) => {
-    console.log(me);
-}).catch((error) => {
-    console.log('Error!',error._message);
-})
 */
+
+const task = new Task({
+    description: ' Learn Javascript'
+})
+
+task.save().then((task) => {
+    console.log(task);
+}).catch((error) => {
+    console.log(error.message);
+})
+
 
