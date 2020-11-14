@@ -37,12 +37,14 @@ app.get('/users', (req, res) => {
 })
 
 app.get('/users/:id', (req, res) => {
-    console.log(req.params);
-    const _id = req.params
-    User.find({_id}).then((user) => {
-        res.send(user)
+    const _id = req.params.id
+    User.findById(_id).then((user) => {
+        if(!user) {
+            return res.status(404).send()
+        }
+        res.status(200).send(user)
     }).catch((err) => {
-        res.send(err.message)
+        res.status(500).send()
     })
 })
 
