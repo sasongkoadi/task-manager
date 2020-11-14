@@ -22,7 +22,7 @@ const User = mongoose.model('User', {
         type: String,
         required: true,
         trim:true,
-        minLength: 6,
+        minlength: 6,
         validate(value){
             if (value.toLowerCase().includes('password')) {
                 throw new Error('Your Password cannot contain password')
