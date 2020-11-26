@@ -40,4 +40,33 @@ const User = mongoose.model('User', {
     },
 })
 
-module.exports = User
+
+const createUser = (userData) => {
+    const user = new User(userData)
+    return user.save()
+}
+
+const getUsersData = () => {
+    return User.find({})
+}
+
+const getUserById = (id) => {
+    return User.findById(id)
+}
+
+const updateUserById = (id, userData) => {
+    return User.findByIdAndUpdate({_id: id}, userData, {new: true, runValidators: true})
+}
+
+const deleteUserById = (id) => {
+    return User.findByIdAndRemove({_id: id})
+}
+
+
+module.exports = {
+    createUser,
+    getUsersData,
+    getUserById,
+    updateUserById,
+    deleteUserById
+} 

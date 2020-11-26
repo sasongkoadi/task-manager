@@ -1,73 +1,17 @@
 const express = require('express')
-require('./db/mongoose')
-const User = require('./models/user')
-const Task = require('./models/task')
-const { ObjectID } = require('mongodb')
-
 const app = express()
+require('./db/mongoose')
+const bodyParser = require('body-parser')
+const router = require('./route/routers')
 const port = process.env.PORT || 3000
 
+const Task = require('./models/task')
+
+//middleware
+const jsonParser = bodyParser.json()
+app.use(jsonParser)
+app.use(router)
 app.use(express.json())
-
-//Users
-
-app.post('/users', async (req, res) => {
-    const user = new User(req.body)
-    try {
-        await user.save()
-        res.status(201).send(user)
-    } catch (error) {
-        res.status(400).send(error._message) 
-    }
-})
-
-app.get('/users', async (req, res) => {
-    try {
-        const user = await User.find({}) 
-        res.send(user)
-    } catch (error) {
-        res.status(500).send(error._message)
-        
-    }
-})
-
-app.get('/users/:id', async (req, res) => {
-    const _id = req.params.id
-    try {
-        const user = await User.findById(_id) 
-        !user? res.status(404).send({message: "User Not Found"}) : res.status(200).send(user)
-    } catch (error) {
-        res.status(500).send(error._message)    
-    }
-})
-
-app.patch('/users/:id', async (req, res) => {
-    const _id = req.params.id
-    const updates = Object.keys(req.body)
-    const allowUpdate = ['name', 'age', 'email', 'password']
-    const isUpdated = updates.every((update) => allowUpdate.includes(update))
-    if (!isUpdated) {
-        return res.status(400).send({
-            message: "Invalid Update"
-        })
-    }
-    try {
-        const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true})
-        !user? res.status(404).send({message: "User Not Found"}) : res.send(user)
-    } catch (error) {
-        res.status(500).send(error._message) 
-    }
-})
-
-app.delete('/users/:id', async (req, res) => {
-    const _id = req.params.id
-    try {
-        const user = await User.findByIdAndDelete(_id) 
-        res.status(200).send(user)
-    } catch (error) {
-        res.status(500).send(error._message)
-    }
-})
 
 //TASK 
 
