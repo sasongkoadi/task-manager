@@ -6,6 +6,10 @@ const app = express()
 const bcrypt = require('bcrypt')
 const port = process.env.PORT || 3000
 
+app.use((req, res, next) => {
+    res.status(503).send({message: 'Under Maintenance'})
+})
+
 app.use(express.json())
 app.use(usersRouter, tasksRouter)
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
