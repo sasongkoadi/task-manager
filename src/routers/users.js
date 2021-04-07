@@ -10,10 +10,15 @@ router.post('/users', async (req, res) => {
         const token = await user.genAuthToken()
         res.status(201).send( { user, token })
     } catch (error) {
-        res.status(400).send(error._message) 
+        res.status(400).send(error) 
     }
 })
 
+/*
+Documentation
+Login using method findByCredentials from user static method
+user = contain user data 
+*/
 router.post('/users/login', async (req, res) => {
     try {
        const user = await User.findByCredentials(req.body.email, req.body.password) 
@@ -44,6 +49,12 @@ router.get('/users/:id', async (req, res) => {
     }
 })
 
+/*
+Documentation
+updates = contain data from request body
+update = contain parameter update data from updates using forEach function
+req.body[update] = contain value from update parameter
+*/
 router.patch('/users/:id', async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
@@ -56,13 +67,6 @@ router.patch('/users/:id', async (req, res) => {
     }
     try {
         const user = await User.findById(_id)
-        //-------View Data
-        updates.forEach((update) => {
-            console.log(update);
-            console.log(req.body[update]);
-        })
-        console.log(user);
-        // -------------
         updates.forEach((update) => user[update] = req.body[update])
         await user.save()
         !user? res.status(404).send({message: "User Not Found"}) : res.send(user)

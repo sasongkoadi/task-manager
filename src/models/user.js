@@ -49,17 +49,35 @@ const userSchema = new mongoose.Schema({
     }],
 })
 
-userSchema.methods.genAuthToken = async function () {
+/*
+Documentation
+Hash plain text password to hash and save to database
+using method isModified with password parameter
+it will gives true if user create a new password
+and it will gives true if user edit a password
+*/
+userSchema.pre('save', async function(next) {
     const user = this
-    const token = jwt.sign({ _id : user._id.toString() }, 'testing')
+    if (user.isModified('password')) {
+       user.password = await bcrypt.hash(user.password, 10) 
+    }
+    next()
+})
 
-    user.tokens = user.tokens.concat({token})
-    await user.save()
+/* 
+Documentation
+static methods are define on the model
+exp -> static method findOne from model User
 
-    return token
-}
+Make a static method findByCredentials
+using parameter email for search user
+and password for login
 
-// Login using email and password
+user = contain user data from method findOne using email 
+isMatch = contain true of false value of password
+return user data
+Login using email and password
+*/
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
     if (!user) {
@@ -72,14 +90,22 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
-// Hash plain text password to hash before save
-userSchema.pre('save', async function(next) {
+/*
+Documentation
+methods are define for documents
+usually using this for get document (data)
+*/
+userSchema.methods.genAuthToken = async function () {
     const user = this
-    if (user.isModified('password')) {
-       user.password = await bcrypt.hash(user.password, 10) 
-    }
-    next()
-})
+    const token = jwt.sign({ _id : user._id.toString() }, 'testing')
+
+    user.tokens = user.tokens.concat({token})
+    await user.save()
+
+    return token
+}
+
+
 
 const User = mongoose.model('User', userSchema)
 

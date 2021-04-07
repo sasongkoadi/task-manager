@@ -31,6 +31,12 @@ router.get('/tasks/:id', async (req, res) => {
     }
 })
 
+/*
+Documentation
+updates = contain data from request body
+update = contain parameter update data from updates using forEach function
+req.body[update] = contain value from update parameter
+*/
 router.patch('/tasks/:id', async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
