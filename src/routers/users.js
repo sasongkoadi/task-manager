@@ -30,16 +30,33 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
+/*
+Documentation
+
+req.user.tokens.filter()
+this method give a result req.user.tokens = contain value token without token.token === req.token
+and than req.user.save() will save new user data 
+
+*/
 router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
-            console.log(token.token);
-            console.log("Token ==", req.token);
-            console.log(token.token !== req.token);
             return token.token !== req.token
         })
+        console.log('----result----');
+        console.log(req.user);
         await req.user.save()
         res.send()
+    } catch (error) {
+        res.status(500).send() 
+    }
+})
+
+router.post('/users/logoutAll', auth, async (req, res)=> {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.status(200).send()
     } catch (error) {
         res.status(500).send() 
     }
