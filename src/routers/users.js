@@ -52,6 +52,12 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 })
 
+/*
+Documentation 
+
+req.user.tokens = [] will give empty array on tokens data
+adn than it will save using method req.user.save() as new user data
+ */
 router.post('/users/logoutAll', auth, async (req, res)=> {
     try {
         req.user.tokens = []
