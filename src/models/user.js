@@ -90,6 +90,16 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
+userSchema.methods.passwordCheck = async (password) => {
+    const user = this
+    const isMatch = await bcrypt.compare(password, user.password) 
+    if (isMatch) {
+        return true
+    } else {
+        return false
+    }
+}
+
 /*
 Documentation
 methods are define for documents
@@ -103,6 +113,21 @@ userSchema.methods.genAuthToken = async function () {
     await user.save()
 
     return token
+}
+
+/**
+ * Documentation
+ * toJSON method is method to hiding a object data 
+ * @returns 
+ */
+userSchema.methods.toJSON = function () {
+    const user = this 
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
 }
 
 

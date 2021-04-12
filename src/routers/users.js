@@ -72,47 +72,45 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
-router.get('/users/:id', async (req, res) => {
-    const _id = req.params.id
-    try {
-        const user = await User.findById(_id) 
-        !user? res.status(404).send({message: "User Not Found"}) : res.status(200).send(user)
-    } catch (error) {
-        res.status(500).send(error._message)    
-    }
-})
-
 /*
 Documentation
 updates = contain data from request body
 update = contain parameter update data from updates using forEach function
 req.body[update] = contain value from update parameter
 */
-router.patch('/users/:id', async (req, res) => {
-    const _id = req.params.id
+router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowUpdate = ['name', 'age', 'email', 'password']
-    const isUpdated = updates.every((update) => allowUpdate.includes(update))
+    const updateProfileData = ['name', 'age', 'email']
+    const isUpdated = updates.every((update) => updateProfileData.includes(update))
     if (!isUpdated) {
         return res.status(400).send({
             message: "Invalid Update"
         })
     }
     try {
-        const user = await User.findById(_id)
+        const user = req.user 
         updates.forEach((update) => user[update] = req.body[update])
         await user.save()
-        !user? res.status(404).send({message: "User Not Found"}) : res.send(user)
+        res.status(200).send(user)
     } catch (error) {
         res.status(500).send(error._message) 
     }
 })
 
-router.delete('/users/:id', async (req, res) => {
-    const _id = req.params.id
+router.patch('/users/me/password', auth, async (req, res) => {
+    const user = req.user
+    const check = user.passwordCheck(req.body.password)
+    console.log(check);
+})
+
+router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(_id) 
-        res.status(200).send(user)
+        await req.user.remove()
+        res.status(200).send(
+            req.user,
+            {
+                message: "User Has been deleted"
+            })
     } catch (error) {
         res.status(500).send(error._message)
     }
