@@ -90,15 +90,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
-userSchema.methods.passwordCheck = async (password) => {
-    const user = this
-    const isMatch = await bcrypt.compare(password, user.password) 
-    if (isMatch) {
-        return true
-    } else {
-        return false
-    }
-}
+
 
 /*
 Documentation
@@ -113,6 +105,15 @@ userSchema.methods.genAuthToken = async function () {
     await user.save()
 
     return token
+}
+
+userSchema.methods.passwordCheck = async function (password) {
+    const user = this
+    const isMatch = await bcrypt.compareSync(password, user.password) 
+    if (isMatch) {
+        return true
+    } 
+    return false
 }
 
 /**

@@ -43,8 +43,6 @@ router.post('/users/logout', auth, async (req, res) => {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token
         })
-        console.log('----result----');
-        console.log(req.user);
         await req.user.save()
         res.send()
     } catch (error) {
@@ -97,10 +95,27 @@ router.patch('/users/me', auth, async (req, res) => {
     }
 })
 
-router.patch('/users/me/password', auth, async (req, res) => {
-    const user = req.user
-    const check = user.passwordCheck(req.body.password)
-    console.log(check);
+router.patch('/users/password', auth, async (req, res) => {
+    try {
+        const user = req.user
+        const passwordInput = req.body.password 
+        const check = await user.passwordCheck(passwordInput)
+        if (!check) {
+            user.password = passwordInput
+            user.tokens = []
+            await user.save()
+            res.status(200).send(
+                {
+                    message: "Password has been changed"
+                })
+        } else {
+            res.status(400).send({
+                message: "Your are using a same password"
+            })
+        }
+    } catch (error) {
+        res.status(400).send(error) 
+    }
 })
 
 router.delete('/users/me', auth, async (req, res) => {
