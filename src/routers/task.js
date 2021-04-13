@@ -9,26 +9,26 @@ router.post('/tasks', auth, async (req, res) => {
         owner: req.user._id
     }) 
     try {
-        await task.save()    
+        await task.save()
         res.status(201).send(task)
     } catch (error) {
         res.status(400).send(error._message) 
     }
 })
 
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find({})
+        const tasks = await Task.find({owner: req.user._id})
         res.status(200).send(tasks)
     } catch (error) {
-        res.status(500).send(error._message) 
+        res.status(500).send(error._message)
     }
 })
 
-router.get('/tasks/:id', async (req, res) => {
+router.get('/tasks/:id', auth, async (req, res) => {
     const _id = req.params.id
     try {
-        const task = await Task.findById(_id)
+        const task = await Task.findOne({_id, owner: req.user._id})
         !task? res.status(404).send({message: "Task Not Found"}) : res.send(task)
     } catch (error) {
         res.status(500).send(error._message)
