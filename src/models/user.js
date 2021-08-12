@@ -49,6 +49,12 @@ const userSchema = new mongoose.Schema({
     }],
 })
 
+userSchema.virtual('mytasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner' 
+})
+
 /*
 Documentation
 Hash plain text password to hash and save to database
