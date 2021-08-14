@@ -3,7 +3,7 @@ const auth = require('../middleware/auth')
 const Task = require('../models/task')
 const router = new express.Router()
 
-router.post('/tasks/addtask', auth, async (req, res) => {
+router.post('/tasks/add', auth, async (req, res) => {
     const task = new Task({
         ...req.body,
         owner: req.user._id
@@ -16,7 +16,7 @@ router.post('/tasks/addtask', auth, async (req, res) => {
     }
 })
 
-router.get('/tasks/showtasks', auth, async (req, res) => {
+router.get('/tasks/show', auth, async (req, res) => {
     try {
         //const tasks = await Task.find({owner: req.user._id})
         await req.user.populate('mytasks').execPopulate()
@@ -26,7 +26,7 @@ router.get('/tasks/showtasks', auth, async (req, res) => {
     }
 })
 
-router.get('/tasks/showtask/:id', auth, async (req, res) => {
+router.get('/tasks/show/:id', auth, async (req, res) => {
     const _id = req.params.id
     try {
         const task = await Task.findOne({_id, owner: req.user._id})
@@ -42,7 +42,7 @@ updates = contain data from request body
 update = contain parameter update data from updates using forEach function
 req.body[update] = contain value from update parameter
 */
-router.patch('/tasks/edittask/:id', auth, async (req, res) => {
+router.patch('/tasks/edit/:id', auth, async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
     const allowUpdate = ['description', 'complete']
