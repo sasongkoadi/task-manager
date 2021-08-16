@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator').default
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -55,6 +56,12 @@ userSchema.virtual('mytasks', {
     foreignField: 'owner' 
 })
 
+userSchema.pre('remove', async function(next) {
+    const user = this
+    await Task.deleteMany({owner: user._id})
+    next()
+})
+
 /*
 Documentation
 Hash plain text password to hash and save to database
@@ -96,8 +103,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
-
-
 /*
 Documentation
 methods are define for documents
@@ -136,7 +141,6 @@ userSchema.methods.toJSON = function () {
 
     return userObject
 }
-
 
 
 const User = mongoose.model('User', userSchema)
