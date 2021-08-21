@@ -6,7 +6,7 @@ const router = new express.Router()
 router.post('/tasks/add', auth, async (req, res) => {
     const task = new Task({
         ...req.body,
-        owner: req.user._id
+        owner: req.user._id,
     }) 
     try {
         await task.save()
@@ -17,10 +17,12 @@ router.post('/tasks/add', auth, async (req, res) => {
 })
 
 router.get('/tasks/show', auth, async (req, res) => {
+    const projectID = req.body.project
+    console.log(projectID)
     try {
-        //const tasks = await Task.find({owner: req.user._id})
-        await req.user.populate('mytasks').execPopulate()
-        res.status(200).send(req.user.mytasks)
+        const tasks = await Task.find({owner: req.user._id, project: projectID})
+        //await req.user.populate('mytasks').execPopulate()
+        res.status(200).send(tasks)
     } catch (error) {
         res.status(500).send(error._message)
     }
