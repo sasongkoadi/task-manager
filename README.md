@@ -1,2 +1,2 @@
-# task-manager
-REST API task manager application
+# TO-DO-List Backend
+REST API for TO-DO-List application 
