@@ -17,7 +17,8 @@ router.post('/tasks/add', auth, async (req, res) => {
 })
 
 router.get('/tasks/show', auth, async (req, res) => {
-    const projectID = req.body.project._id
+    const projectID = req.body.project
+    console.log(projectID)
     try {
         const tasks = await Task.find({owner: req.user._id, project: projectID})
         //await req.user.populate('mytasks').execPopulate()

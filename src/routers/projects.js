@@ -3,8 +3,7 @@ const auth = require('../middleware/auth')
 const Project = require('../models/project')
 const router = new express.Router()
 
-router.post('project/add', async (req, res) => {
-    console.log('test')
+router.post('/project/add', auth, async (req, res) => {
     const project = new Project({
         ...req.body,
         author: req.user._id,
@@ -12,15 +11,13 @@ router.post('project/add', async (req, res) => {
     console.log(project)
     try {
         await project.save()
-        res.status(201).send(project, {
-            message: "Berhasil"
-        })
+        res.status(201).send(project)
     } catch (error) {
         res.status(400).send(error._message)
     }
 })
 
-router.get('project/show', auth, async (req, res) => {
+router.get('/project/show', auth, async (req, res) => {
     try {
         const projects = await Project.find({author: req.user._id})
         res.status(201).send(projects)
