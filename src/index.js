@@ -1,4 +1,5 @@
 const express = require('express')
+<<<<<<< HEAD
 const app = express()
 require('./db/mongoose')
 const bodyParser = require('body-parser')
@@ -72,3 +73,20 @@ app.delete('/tasks/:id', async (req, res) => {
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+=======
+const cors = require('cors')
+const bodyParser = require('body-parser')
+require('./db/mongoose')
+const usersRouter = require('./routers/users')
+const tasksRouter = require('./routers/tasks')
+const projectsRouter = require('./routers/projects')
+const app = express()
+const HOST = '127.0.0.1'
+const PORT = process.env.PORT || 44010
+
+app.use(express.json())
+app.use(bodyParser.json())
+app.use(cors())
+app.use(usersRouter, tasksRouter, projectsRouter)
+app.listen(PORT,HOST, () => console.log(`Example app listening on http://${HOST}:${PORT}`))
+>>>>>>> 7b06ba387639e7944ab61ecb63312d90b71c7cf7
