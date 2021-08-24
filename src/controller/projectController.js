@@ -1,9 +1,6 @@
-const express = require('express')
-const auth = require('../middleware/auth')
 const Project = require('../models/project')
-const router = new express.Router()
 
-router.post('/project/add', auth, async (req, res) => {
+const addProject = async (req, res) => {
     const project = new Project({
         ...req.body,
         author: req.user._id,
@@ -15,18 +12,18 @@ router.post('/project/add', auth, async (req, res) => {
     } catch (error) {
         res.status(400).send(error._message)
     }
-})
+}
 
-router.get('/project/show', auth, async (req, res) => {
+const showProjects = async (req, res) => {
     try {
         const projects = await Project.find({author: req.user._id})
         res.status(201).send(projects)
     } catch (error) {
         res.status(500).send(error._message)
     }
-})
+}
 
-router.get('/project/show/:id', auth, async (req, res) => {
+const showProjectId = async (req, res) => {
     const _id = req.params.id
     try {
        const project = await Project.findOne({_id, author: req.user._id}) 
@@ -34,9 +31,9 @@ router.get('/project/show/:id', auth, async (req, res) => {
     } catch (error) {
        res.status(500).send(error._message) 
     }
-})
+}
 
-router.patch('/project/edit/:id', auth, async (req, res) => {
+const editProject = async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
     const allowUpdate = ['title']
@@ -56,9 +53,9 @@ router.patch('/project/edit/:id', auth, async (req, res) => {
     } catch (error) {
        res.status(500).send(error._message) 
     }
-})
+}
 
-router.delete('/project/delete/:id', auth, async (req, res) => {
+const deleteProject = async (req, res) => {
     const _id = req.params.id
     try {
        await Project.findOneAndDelete({_id, author: req.user._id}) 
@@ -68,6 +65,12 @@ router.delete('/project/delete/:id', auth, async (req, res) => {
     } catch (error) {
        res.status(500).send(error._message) 
     }
-})
+}
 
-module.exports = router
+module.exports = {
+    addProject,
+    showProjectId,
+    showProjects,
+    editProject,
+    deleteProject
+} 

@@ -1,9 +1,6 @@
-const express = require('express')
-const auth = require('../middleware/auth')
 const Task = require('../models/task')
-const router = new express.Router()
 
-router.post('/tasks/add', auth, async (req, res) => {
+const addTask = async (req, res) => {
     const task = new Task({
         ...req.body,
         owner: req.user._id,
@@ -14,9 +11,9 @@ router.post('/tasks/add', auth, async (req, res) => {
     } catch (error) {
         res.status(400).send(error._message) 
     }
-})
+}
 
-router.get('/tasks/show', auth, async (req, res) => {
+const showTasks = async (req, res) => {
     const projectID = req.body.project
     console.log(projectID)
     try {
@@ -26,9 +23,9 @@ router.get('/tasks/show', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send(error._message)
     }
-})
+}
 
-router.get('/tasks/show/:id', auth, async (req, res) => {
+const showTaskId = async (req, res) => {
     const _id = req.params.id
     try {
         const task = await Task.findOne({_id, owner: req.user._id})
@@ -36,7 +33,7 @@ router.get('/tasks/show/:id', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send(error._message)
     }
-})
+}
 
 /*
 Documentation
@@ -44,7 +41,7 @@ updates = contain data from request body
 update = contain parameter update data from updates using forEach function
 req.body[update] = contain value from update parameter
 */
-router.patch('/tasks/edit/:id', auth, async (req, res) => {
+const editTask = async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
     const allowUpdate = ['description', 'complete']
@@ -62,9 +59,9 @@ router.patch('/tasks/edit/:id', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send(error._message) 
     }
-})
+}
 
-router.delete('/tasks/delete/:id', auth, async (req, res) => {
+const deleteTask = async (req, res) => {
     const _id = req.params.id
     try {
         await Task.findOneAndDelete({_id, owner: req.user._id})
@@ -75,6 +72,12 @@ router.delete('/tasks/delete/:id', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message)
     }
-})
+}
 
-module.exports = router
+module.exports = {
+    addTask,
+    showTasks,
+    showTaskId,
+    editTask,
+    deleteTask
+}
