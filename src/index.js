@@ -5,6 +5,7 @@ require('./db/mongoose')
 const usersRouter = require('./routers/users')
 const tasksRouter = require('./routers/tasks')
 const projectsRouter = require('./routers/projects')
+const testRouter = require('./route/routers')
 const app = express()
 const HOST = '127.0.0.1'
 const PORT = process.env.PORT || 44010
@@ -12,5 +13,5 @@ const PORT = process.env.PORT || 44010
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(cors())
-app.use(usersRouter, tasksRouter, projectsRouter)
+app.use(usersRouter, tasksRouter, projectsRouter, testRouter)
 app.listen(PORT,HOST, () => console.log(`Example app listening on http://${HOST}:${PORT}`))
