@@ -62,38 +62,6 @@ userSchema.pre('remove', async function(next) {
     next()
 })
 
-<<<<<<< HEAD
-
-const createUser = (userData) => {
-    const user = new User(userData)
-    return user.save()
-}
-
-const getUsersData = () => {
-    return User.find({})
-}
-
-const getUserById = (id) => {
-    return User.findById(id)
-}
-
-const updateUserById = (id, userData) => {
-    return User.findByIdAndUpdate({_id: id}, userData, {new: true, runValidators: true})
-}
-
-const deleteUserById = (id) => {
-    return User.findByIdAndRemove({_id: id})
-}
-
-
-module.exports = {
-    createUser,
-    getUsersData,
-    getUserById,
-    updateUserById,
-    deleteUserById
-} 
-=======
 /*
 Documentation
 Hash plain text password to hash and save to database
@@ -178,4 +146,3 @@ userSchema.methods.toJSON = function () {
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
->>>>>>> 7b06ba387639e7944ab61ecb63312d90b71c7cf7

@@ -3,6 +3,19 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
+class userController {
+    async createUser(req, res, auth) {
+        console.log(auth);
+        const user = new User(req.body)
+        try {
+            await user.save()
+            const token = await auth.user.genAuthToken()
+            res.status(201).send( { user, token, message: 'Register Successful' })
+        } catch (error) {
+            res.status(400).send(error) 
+        }
+    }
+}
 
 router.post('/users/signup', async (req, res) => {
     const user = new User(req.body)
@@ -130,4 +143,7 @@ router.delete('/users/me', auth, async (req, res) => {
     }
 })
 
-module.exports = router
+module.exports = {
+    router,
+    userController
+} 
