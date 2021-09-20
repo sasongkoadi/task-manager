@@ -3,10 +3,13 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 require('./db/mongoose')
 const Router = require('./router/routers')
+const initialData = require('./controller/initialData')
 const app = express()
 const HOST = '127.0.0.1'
 const PORT = process.env.PORT || 44010
 
+
+initialData()
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(cors())

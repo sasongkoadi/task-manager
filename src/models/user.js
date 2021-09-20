@@ -1,10 +1,15 @@
 const mongoose = require('mongoose')
 const validator = require('validator').default
+const roles = require('../models/roles')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Task = require('./task')
 
 const userSchema = new mongoose.Schema({
+    role: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role' 
+    },
     name: {
         type: String,
         required: true,
@@ -62,6 +67,7 @@ userSchema.pre('remove', async function(next) {
     next()
 })
 
+
 /*
 Documentation
 Hash plain text password to hash and save to database
@@ -74,6 +80,21 @@ userSchema.pre('save', async function(next) {
     if (user.isModified('password')) {
        user.password = await bcrypt.hash(user.password, 10) 
     }
+    next()
+})
+
+userSchema.pre('save', async function(next) {
+    const user = this
+    const roleData = user.role
+    console.log(roleData);
+    if(!roleData){
+        const userRoleData = await roles.find({
+            data: { $in : 4}
+        })
+        console.log("ROLE DATA ID =========",userRoleData);
+        user.role = userRoleData[0]._id
+        next()
+    } 
     next()
 })
 
