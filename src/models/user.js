@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator').default
+const roles = require('../models/roles')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Task = require('./task')
@@ -84,8 +85,16 @@ userSchema.pre('save', async function(next) {
 
 userSchema.pre('save', async function(next) {
     const user = this
-    const roleCheck = await user.role
-    console.log(roleCheck.estimatedDocumentCount());
+    const roleData = user.role
+    console.log(roleData);
+    if(!roleData){
+        const userRoleData = await roles.find({
+            data: { $in : 4}
+        })
+        console.log("ROLE DATA ID =========",userRoleData);
+        user.role = userRoleData[0]._id
+        next()
+    } 
     next()
 })
 

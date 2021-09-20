@@ -1,5 +1,5 @@
 const Role = require('../models/roles')
-const rolesData = ['user', 'admin', 'moderator']
+const rolesData = [4,5,6,7,8,9]
 
 const createRole = async () => {
     console.log('TESTING');
@@ -7,7 +7,7 @@ const createRole = async () => {
         if (!err && count === 0) {
             rolesData.forEach(role => {
                 new Role({
-                    name: role
+                    data: role
                     }).save(err => {
                         if (err) {
                             console.log("error", err);
@@ -20,5 +20,6 @@ const createRole = async () => {
         }
     })    
 }
+
 
 module.exports = createRole

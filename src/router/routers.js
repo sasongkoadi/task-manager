@@ -9,25 +9,30 @@ const router = express.Router()
 //users
 router.post('/users/signup', userController.createUser)
 router.post('/users/login', userController.loginUser)
-router.post('/users/logout', auth, userController.logoutUser)
-router.post('/users/logoutAll', auth, userController.logoutUserAll)
-router.get('/users/me', auth, userController.profile)
-router.patch('/users/me', auth, userController.editProfile)
-router.patch('/users/password', auth, userController.editPassword)
-router.delete('/users/me', auth, userController.deleteUser)
+router.post('/users/logout', auth.authentication, auth.isUser , userController.logoutUser)
+router.post('/users/logoutAll', auth.authentication, auth.isUser, userController.logoutUserAll)
+router.get('/users/me', auth.authentication, auth.isUser, userController.profile)
+router.patch('/users/me', auth.authentication, auth.isUser, userController.editProfile)
+router.patch('/users/password', auth.authentication, auth.isUser, userController.editPassword)
+//router.delete('/users/me', auth.authentication, auth.isUser, userController.deleteUser)
 
 //tasks
-router.post('/tasks/add', auth, taskController.addTask) 
-router.get('/tasks/show', auth, taskController.showTasks)
-router.get('/tasks/show/:id', auth, taskController.showTaskId)
-router.patch('/tasks/edit/:id', auth, taskController.editTask)
-router.delete('/tasks/delete/:id', auth, taskController.deleteTask)
+router.post('/tasks/add', auth.authentication, taskController.addTask) 
+router.get('/tasks/show', auth.authentication, taskController.showTasks)
+router.get('/tasks/show/:id', auth.authentication, taskController.showTaskId)
+router.patch('/tasks/edit/:id', auth.authentication, taskController.editTask)
+router.delete('/tasks/delete/:id', auth.authentication, taskController.deleteTask)
 
 //projects
-router.post('/project/add', auth, projectController.addProject) 
-router.get('/project/show', auth, projectController.showProjects)
-router.get('/project/show/:id', auth, projectController.showProjectId)
-router.patch('/project/edit/:id', auth, projectController.editProject)
-router.delete('/project/delete/:id', auth, projectController.deleteProject)
+router.post('/project/add', auth.authentication, projectController.addProject) 
+router.get('/project/show', auth.authentication, projectController.showProjects)
+router.get('/project/show/:id', auth.authentication, projectController.showProjectId)
+router.patch('/project/edit/:id', auth.authentication, projectController.editProject)
+router.delete('/project/delete/:id', auth.authentication, projectController.deleteProject)
+
+//Admin
+
+//users
+router.get('/users/all', auth.authentication, auth.isAdmin, userController.showAllUsers)
 
 module.exports = router

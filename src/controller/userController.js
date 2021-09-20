@@ -134,6 +134,18 @@ const deleteUser = async (req, res) => {
     }
 }
 
+//Admin Jobs
+
+const showAllUsers = async (req, res) => {
+    console.log('AllUsers Data ====');
+    try {
+        const allUsers = await User.find({})
+        res.status(200).send(allUsers)
+    } catch (error) {
+        res.status(500).send(error._message)
+    }
+}
+
 module.exports = {
     createUser,
     loginUser,
@@ -142,5 +154,6 @@ module.exports = {
     profile,
     editProfile,
     editPassword,
-    deleteUser
+    deleteUser,
+    showAllUsers
 }
