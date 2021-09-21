@@ -2,6 +2,9 @@ const express = require('express')
 const userController = require('../controller/userController')
 const taskController = require('../controller/taskController')
 const projectController = require('../controller/projectController')
+const executorController = require('../controller/executorController')
+const statusReqController = require('../controller/statusReqController')
+const workrequestController = require('../controller/workRequestController')
 const auth = require('../middleware/auth')
 const router = express.Router()
 
@@ -24,15 +27,35 @@ router.patch('/tasks/edit/:id', auth.authentication, taskController.editTask)
 router.delete('/tasks/delete/:id', auth.authentication, taskController.deleteTask)
 
 //projects
-router.post('/project/add', auth.authentication, projectController.addProject) 
-router.get('/project/show', auth.authentication, projectController.showProjects)
-router.get('/project/show/:id', auth.authentication, projectController.showProjectId)
-router.patch('/project/edit/:id', auth.authentication, projectController.editProject)
-router.delete('/project/delete/:id', auth.authentication, projectController.deleteProject)
+router.post('/project/add', auth.authentication, auth.isUser, projectController.addProject) 
+router.get('/project/show', auth.authentication, auth.isUser, projectController.showProjects)
+router.get('/project/show/:id', auth.authentication, auth.isUser, projectController.showProjectId)
+router.patch('/project/edit/:id', auth.authentication, auth.isUser, projectController.editProject)
+router.delete('/project/delete/:id', auth.authentication, auth.isUser, projectController.deleteProject)
 
-//Admin
+//Executors
+router.get('/executors/show', auth.authentication, auth.isUser, executorController.showAllExecutors)
+
+//StatusReq
+router.get('/statusrequest/show',auth.authentication, auth.isUser, statusReqController.showAllStatus)
+
+//Work Request
+router.post('/workrequest/add', auth.authentication, auth.isUser, workrequestController.addWorkRequest)
+router.get('/workrequest/all', auth.authentication, auth.isGuest, workrequestController.showWR)
+router.get('/workrequest/daily/:id', auth.authentication, auth.isGuest, workrequestController.showWRStatus)
+router.get('/workrequest/show/:id', auth.authentication, auth.isGuest, workrequestController.showWRId)
+router.patch('/workrequest/edit/:id', auth.authentication, auth.isUser, workrequestController.updateWR)
+router.delete('/workrequest/delete/:id', auth.authentication, auth.isUser, workrequestController.deleteWR)
+
+//ADMIN CONTROL
 
 //users
 router.get('/users/all', auth.authentication, auth.isAdmin, userController.showAllUsers)
+
+//Executors
+router.post('/executor/add', auth.authentication, auth.isAdmin, executorController.addExecutor)
+
+//StatusReq
+router.post('/statusrequest/add', auth.authentication, auth.isAdmin, statusReqController.addStatus)
 
 module.exports = router

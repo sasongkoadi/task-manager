@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const Role = require('../models/roles')
 
 /*
 Roles Rules
@@ -48,6 +47,7 @@ const isUser = async (req, res,next) => {
     try {
         const user = req.userData
         const role = user.role
+        console.log(user);
         if(role.data >= 5 && role.data <=9 ){
             req.user = user
             next()
@@ -61,10 +61,8 @@ const isUser = async (req, res,next) => {
 const isGuest = async (req, res, next) => {
     try {
         const user = req.userData
-        const userRoleId = await Role.find({
-            _id: { $in: user.role}
-        })
-        if (userRoleId[0].data >= 4 && userRoleId[0].data <= 9){
+        const role = user.role 
+        if (role.data >= 4 && role.data <= 9){
             req.user = user
             next()
         } else {
@@ -78,10 +76,8 @@ const isGuest = async (req, res, next) => {
 const isModerator = async (req, res,next) => {
     try {
         const user = req.userData
-        const userRoleId = await Role.find({
-            _id : { $in: user.role}
-        })
-        if(userRoleId[0].name === 8){
+        const role = user.role 
+        if(role.data === 8){
             req.user = user
             next()
         } else {

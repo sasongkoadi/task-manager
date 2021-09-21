@@ -1,7 +1,8 @@
 const Role = require('../models/roles')
 const rolesData = [4,5,6,7,8,9]
+const StatusReq = require('../models/statusRequest')
 
-const createRole = async () => {
+const AutoInputData = async () => {
     console.log('TESTING');
     await Role.estimatedDocumentCount((err, count) => {
         if (!err && count === 0) {
@@ -16,10 +17,19 @@ const createRole = async () => {
                         });
             })
         } else {
-            return console.log('Roles DB is Ready');
+            console.log('Roles Collection is Ready');
         }
     })    
+
+    await StatusReq.estimatedDocumentCount((err, count) => {
+        if (!err && count === 0) {
+            const status = new StatusReq({ name: 'Daily'})
+            status.save()
+        } else {
+            console.log('StatusRequest Collection is Ready');
+        }
+    }) 
 }
 
 
-module.exports = createRole
+module.exports = AutoInputData 

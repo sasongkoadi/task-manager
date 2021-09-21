@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }],
+},
+
+{
+    timestamps: true
 })
 
 userSchema.virtual('mytasks', {
@@ -86,12 +90,10 @@ userSchema.pre('save', async function(next) {
 userSchema.pre('save', async function(next) {
     const user = this
     const roleData = user.role
-    console.log(roleData);
     if(!roleData){
         const userRoleData = await roles.find({
             data: { $in : 4}
         })
-        console.log("ROLE DATA ID =========",userRoleData);
         user.role = userRoleData[0]._id
         next()
     } 
