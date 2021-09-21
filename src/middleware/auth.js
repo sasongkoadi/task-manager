@@ -16,7 +16,7 @@ const authentication = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '')
         const decode = jwt.verify(token, 'testing')
-        const user = await User.findOne({_id: decode._id, 'tokens.token': token})
+        const user = await User.findOne({_id: decode._id, 'tokens.token': token}).populate('role').exec()
         if (!user) {
             throw new Error()
         }
@@ -31,11 +31,8 @@ const authentication = async (req, res, next) => {
 const isAdmin = async (req, res,next) => {
     try {
         const user = req.userData
-        const userRoleId = await Role.find({
-            _id : { $in: user.role}
-        })
-        console.log(userRoleId[0]);
-        if(userRoleId[0].data == 9 ){
+        const role = user.role
+        if(role.data === 9){
             req.user = user
             next()
         } else {
@@ -50,10 +47,8 @@ const isAdmin = async (req, res,next) => {
 const isUser = async (req, res,next) => {
     try {
         const user = req.userData
-        const userRoleId = await Role.find({
-            _id : { $in: user.role}
-        })
-        if(userRoleId[0].data >= 5 && userRoleId[0].data <=9 ){
+        const role = user.role
+        if(role.data >= 5 && role.data <=9 ){
             req.user = user
             next()
         }   
