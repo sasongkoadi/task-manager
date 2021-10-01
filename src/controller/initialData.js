@@ -1,9 +1,8 @@
 const Role = require('../models/roles')
 const rolesData = [4,5,6,7,8,9]
-const StatusReq = require('../models/statusRequest')
+const workrequestStatus = require('../models/workrequestStatus')
 
 const AutoInputData = async () => {
-    console.log('TESTING');
     await Role.estimatedDocumentCount((err, count) => {
         if (!err && count === 0) {
             rolesData.forEach(role => {
@@ -21,12 +20,13 @@ const AutoInputData = async () => {
         }
     })    
 
-    await StatusReq.estimatedDocumentCount((err, count) => {
+    await workrequestStatus.estimatedDocumentCount((err, count) => {
         if (!err && count === 0) {
-            const status = new StatusReq({ name: 'Daily'})
+            const status = new workrequestStatus({ status: 'Daily'})
             status.save()
+            console.log('Work Request Status added to collection');
         } else {
-            console.log('StatusRequest Collection is Ready');
+            console.log('Work Request Status Collection is Ready');
         }
     }) 
 }

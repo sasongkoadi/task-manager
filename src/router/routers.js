@@ -3,7 +3,7 @@ const userController = require('../controller/userController')
 const taskController = require('../controller/taskController')
 const projectController = require('../controller/projectController')
 const executorController = require('../controller/executorController')
-const statusReqController = require('../controller/statusReqController')
+const workrequestStatusController = require('../controller/workrequestStatusController')
 const workrequestController = require('../controller/workRequestController')
 const auth = require('../middleware/auth')
 const router = express.Router()
@@ -37,12 +37,12 @@ router.delete('/project/delete/:id', auth.authentication, auth.isUser, projectCo
 router.get('/executors/show', auth.authentication, auth.isUser, executorController.showAllExecutors)
 
 //StatusReq
-router.get('/statusrequest/show',auth.authentication, auth.isUser, statusReqController.showAllStatus)
+router.get('/statusrequest/show',auth.authentication, auth.isUser, workrequestStatusController.showAllStatus)
 
 //Work Request
 router.post('/workrequest/add', auth.authentication, auth.isUser, workrequestController.addWorkRequest)
-router.get('/workrequest/all', auth.authentication, auth.isGuest, workrequestController.showWR)
-router.get('/workrequest/daily/:id', auth.authentication, auth.isGuest, workrequestController.showWRStatus)
+router.get('/workrequest/all', auth.authentication, auth.isGuest, workrequestController.showAllWRDaily)
+router.get('/workrequest/status/:id', auth.authentication, auth.isGuest, workrequestController.showAllWRConditional)
 router.get('/workrequest/show/:id', auth.authentication, auth.isGuest, workrequestController.showWRId)
 router.patch('/workrequest/edit/:id', auth.authentication, auth.isUser, workrequestController.updateWR)
 router.delete('/workrequest/delete/:id', auth.authentication, auth.isUser, workrequestController.deleteWR)
@@ -56,6 +56,6 @@ router.get('/users/all', auth.authentication, auth.isAdmin, userController.showA
 router.post('/executor/add', auth.authentication, auth.isAdmin, executorController.addExecutor)
 
 //StatusReq
-router.post('/statusrequest/add', auth.authentication, auth.isAdmin, statusReqController.addStatus)
+router.post('/statusrequest/add', auth.authentication, auth.isAdmin, workrequestStatusController.addStatus)
 
 module.exports = router

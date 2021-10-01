@@ -47,7 +47,6 @@ const isUser = async (req, res,next) => {
     try {
         const user = req.userData
         const role = user.role
-        console.log(user);
         if(role.data >= 5 && role.data <=9 ){
             req.user = user
             next()

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const workReqSchema = new mongoose.Schema({
-    wrNumber: {
+    workrequestNumber: {
         type: Number,
     },
     item: {
@@ -9,7 +9,7 @@ const workReqSchema = new mongoose.Schema({
         require: true,
         trim: true
     },
-    dateCreate: {
+    date: {
         type: Date,
         require: true,
     },
@@ -28,14 +28,14 @@ const workReqSchema = new mongoose.Schema({
         ref: 'User',
         require: true,
     },
-    workingStatus: {
+    status: {
         type: String,
         require: true 
     },
-    statusRequest: {
+    workrequestStatus: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'StatusReq',
         require: true,
+        ref: 'workrequestStatus',
     }
 },
 {
